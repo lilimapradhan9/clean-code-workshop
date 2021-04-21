@@ -2,6 +2,8 @@ package com.thoughtworks.movierental;
 
 public class Rental {
 
+    public static final int BASE_FREQUENT_RENTER_POINTS = 1;
+    public static final int BONUS_FREQUENT_RENTER_POINTS = 2;
     private int daysRented;
     private Movie movie;
 
@@ -36,5 +38,13 @@ public class Rental {
                 break;
         }
         return thisAmount;
+    }
+
+    int frequentRenterPoints() {
+        return isBonusApplicable() ? BONUS_FREQUENT_RENTER_POINTS : BASE_FREQUENT_RENTER_POINTS;
+    }
+
+    private boolean isBonusApplicable() {
+        return movie.isNewRelease() && getDaysRented() > 1;
     }
 }
