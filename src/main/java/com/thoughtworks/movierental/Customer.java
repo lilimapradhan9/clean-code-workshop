@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Customer {
-    private String name;
-    private List<Rental> rentals = new ArrayList<>();
+    private final String name;
+    private final List<Rental> rentals = new ArrayList<>();
 
     public Customer(String name) {
         this.name = name;
@@ -29,9 +29,13 @@ public class Customer {
 
     private String body() {
         StringBuilder result = new StringBuilder();
-        for (Rental each : rentals) {
-            result.append("\t").append(each.getMovie().getTitle()).append("\t").append(each.amount()).append("\n");
-        }
+        rentals.forEach(rental -> result
+                .append("\t")
+                .append(rental.getMovie().getTitle())
+                .append("\t")
+                .append(rental.amount())
+                .append("\n"));
+
         return result.toString();
     }
 

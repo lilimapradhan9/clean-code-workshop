@@ -4,8 +4,8 @@ public class Rental {
 
     public static final int BASE_FREQUENT_RENTER_POINTS = 1;
     public static final int BONUS_FREQUENT_RENTER_POINTS = 2;
-    private int daysRented;
-    private Movie movie;
+    private final int daysRented;
+    private final Movie movie;
 
     public Rental(Movie movie, int daysRented) {
         this.movie = movie;
@@ -21,23 +21,23 @@ public class Rental {
     }
 
     public double amount() {
-        double thisAmount = 0;
+        double amount = 0;
         switch (movie.getPriceCode()) {
             case Movie.REGULAR:
-                thisAmount += 2;
+                amount += 2;
                 if (daysRented > 2)
-                    thisAmount += (daysRented - 2) * 1.5;
+                    amount += (daysRented - 2) * 1.5;
                 break;
             case Movie.NEW_RELEASE:
-                thisAmount += daysRented * 3;
+                amount += daysRented * 3;
                 break;
             case Movie.CHILDRENS:
-                thisAmount += 1.5;
+                amount += 1.5;
                 if (daysRented > 3)
-                    thisAmount += (daysRented - 3) * 1.5;
+                    amount += (daysRented - 3) * 1.5;
                 break;
         }
-        return thisAmount;
+        return amount;
     }
 
     int frequentRenterPoints() {
