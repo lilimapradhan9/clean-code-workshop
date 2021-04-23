@@ -19,8 +19,12 @@ public class Customer {
         return name;
     }
 
-    public String statement() {
+    public String textStatement() {
         return header() + body() + footer();
+    }
+
+    public String htmlStatement() {
+        return htmlHeader() + htmlBody() + htmlFooter();
     }
 
     private String header() {
@@ -42,6 +46,27 @@ public class Customer {
     private String footer() {
         return "Amount owed is " + totalAmount() + "\nYou earned " + frequentRenterPoints()
                 + " frequent renter points";
+    }
+
+    private String htmlHeader() {
+        return "<h2>Rental Record for " + getName() + "</h2>";
+    }
+
+    private String htmlBody() {
+        StringBuilder result = new StringBuilder();
+        result.append("<p>");
+        rentals.forEach(rental -> result
+                .append(rental.getMovie().getTitle())
+                .append(": ")
+                .append(rental.amount())
+                .append("</br>"));
+
+        return result.toString();
+    }
+
+    private String htmlFooter() {
+        return "Amount owed is " + totalAmount() + "</br>You earned " + frequentRenterPoints()
+                + " frequent renter points</p>";
     }
 
     private double totalAmount() {
