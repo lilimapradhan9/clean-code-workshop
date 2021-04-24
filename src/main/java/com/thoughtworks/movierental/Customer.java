@@ -19,33 +19,12 @@ public class Customer {
         return name;
     }
 
-    public String textStatement() {
-        return header() + body() + footer();
-    }
-
     public String htmlStatement() {
         return htmlHeader() + htmlBody() + htmlFooter();
     }
 
-    private String header() {
-        return "Rental Record for " + getName() + "\n";
-    }
-
-    private String body() {
-        StringBuilder result = new StringBuilder();
-        rentals.forEach(rental -> result
-                .append("\t")
-                .append(rental.getMovie().getTitle())
-                .append("\t")
-                .append(rental.amount())
-                .append("\n"));
-
-        return result.toString();
-    }
-
-    private String footer() {
-        return "Amount owed is " + totalAmount() + "\nYou earned " + frequentRenterPoints()
-                + " frequent renter points";
+    public String textStatement() {
+        return new TextStatement(name, rentals, totalAmount(), frequentRenterPoints()).textStatement();
     }
 
     private String htmlHeader() {
@@ -76,5 +55,6 @@ public class Customer {
     private int frequentRenterPoints() {
         return rentals.stream().mapToInt(Rental::frequentRenterPoints).sum();
     }
+
 }
 
