@@ -6,19 +6,25 @@ public class Movie {
     public static final int NEW_RELEASE = 1;
 
     private final String title;
-    private int priceCode;
+    private MovieType movieType;
 
     public Movie(String title, int priceCode) {
         this.title = title;
-        this.priceCode = priceCode;
+        this.movieType = movieTypeFor(priceCode);
+    }
+
+    @Deprecated
+    public Movie(String title, MovieType movieType) {
+        this.title = title;
+        this.movieType = movieType;
     }
 
     public int getPriceCode() {
-        return priceCode;
+        return movieType.priceCode();
     }
 
     public void setPriceCode(int arg) {
-        priceCode = arg;
+        this.movieType = movieTypeFor(arg);
     }
 
     public String getTitle() {
@@ -26,46 +32,27 @@ public class Movie {
     }
 
     boolean isNewRelease() {
-        return priceCode == NEW_RELEASE;
+        return movieType.priceCode() == NEW_RELEASE;
     }
 
     double chargeFor(int priceCode, int daysRented) {
-        switch (priceCode) {
-            case REGULAR:
-                return regularMovieCharge(daysRented);
-            case NEW_RELEASE:
-                return newReleaseMovieCharge(daysRented);
-            case CHILDRENS:
-                return childrenMovieCharge(daysRented);
-        }
-        return 0;
-    }
-
-    private double childrenMovieCharge(int daysRented) {
-        double amount;
-        amount = 0;
-        amount += 1.5;
-        if (daysRented > 3)
-            amount += (daysRented - 3) * 1.5;
-        return amount;
-    }
-
-    private double newReleaseMovieCharge(int daysRented) {
-        double amount;
-        amount = 0;
-        amount += daysRented * 3;
-        return amount;
-    }
-
-    private double regularMovieCharge(int daysRented) {
-        double amount = 0.0;
-        amount += 2;
-        if (daysRented > 2)
-            amount += (daysRented - 2) * 1.5;
-        return amount;
+        return movieType.chargeFor(daysRented);
     }
 
     int frequentRenterPointsFor(int daysRented) {
-        return isNewRelease() && daysRented > 1 ? Rental.BONUS_FREQUENT_RENTER_POINTS : Rental.BASE_FREQUENT_RENTER_POINTS;
+        return movieType.frequentRenterPointsFor(daysRented);
+    }
+
+    private MovieType movieTypeFor(int priceCode) {
+        switch (priceCode) {
+            case REGULAR:
+                return new RegularMovieType(priceCode);
+            case NEW_RELEASE:
+                return new NewReleaseMovieType(priceCode);
+            case CHILDRENS:
+                return new ChildrenMovieType(CHILDRENS);
+            default:
+                return new InvalidMovieType(priceCode);
+        }
     }
 }
